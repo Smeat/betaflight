@@ -51,6 +51,10 @@ void updateArmingStatus(void);
 void taskMainPidLoop(timeUs_t currentTimeUs);
 bool isFlipOverAfterCrashMode(void);
 
+#ifdef USE_GPS_RESCUE
+bool isGPSRescueDisabled(void);
+#endif
+
 void runawayTakeoffTemporaryDisable(uint8_t disableFlag);
 bool isAirmodeActivated();
 timeUs_t getLastDisarmTimeUs(void);

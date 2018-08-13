@@ -263,6 +263,11 @@ void failsafeUpdateState(void)
                             failsafeActivate();
                             failsafeState.phase = FAILSAFE_GPS_RESCUE;
                             failsafeState.receivingRxDataPeriodPreset = PERIOD_OF_3_SECONDS;
+#ifdef USE_GPS_RESCUE
+                            if (isGPSRescueDisabled()) {
+                                failsafeState.phase = FAILSAFE_LANDED; // drop the craft if gps rescue is disabled
+                            }
+#endif
                             break;
                     }
                 }

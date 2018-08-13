@@ -39,6 +39,7 @@ typedef struct gpsRescue_s {
     uint8_t minSats;
     uint16_t minRescueDth; //meters
     gpsRescueSanity_e sanityChecks;
+    bool disableWithAux;
 } gpsRescueConfig_t;
 
 PG_DECLARE(gpsRescueConfig_t, gpsRescueConfig);

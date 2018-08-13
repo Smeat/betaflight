@@ -128,6 +128,10 @@ enum {
 int16_t magHold;
 #endif
 
+#ifdef USE_GPS_RESCUE
+static bool gpsRescueDisabled = false;
+#endif
+
 static bool flipOverAfterCrashMode = false;
 
 static uint32_t disarmAt;     // Time of automatic disarm when "Don't spin the motors when armed" is enabled and auto_disarm_delay is nonzero
@@ -250,7 +254,8 @@ void updateArmingStatus(void)
 
 #ifdef USE_GPS_RESCUE
         if (isModeActivationConditionPresent(BOXGPSRESCUE)) {
-            if (!gpsRescueConfig()->minSats || STATE(GPS_FIX_HOME) || ARMING_FLAG(WAS_EVER_ARMED)) {
+            gpsRescueDisabled = gpsRescueConfig()->disableWithAux && IS_RC_MODE_ACTIVE(BOXGPSRESCUE);
+            if (!gpsRescueConfig()->minSats || STATE(GPS_FIX_HOME) || ARMING_FLAG(WAS_EVER_ARMED) || gpsRescueDisabled) {
                 unsetArmingDisabled(ARMING_DISABLED_GPS);
             } else {
                 setArmingDisabled(ARMING_DISABLED_GPS);
@@ -754,7 +759,7 @@ bool processRx(timeUs_t currentTimeUs)
     }
 
 #ifdef USE_GPS_RESCUE
-    if (IS_RC_MODE_ACTIVE(BOXGPSRESCUE) || (failsafeIsActive() && failsafeConfig()->failsafe_procedure == FAILSAFE_PROCEDURE_GPS_RESCUE)) {
+    if ((IS_RC_MODE_ACTIVE(BOXGPSRESCUE) || (failsafeIsActive() && failsafeConfig()->failsafe_procedure == FAILSAFE_PROCEDURE_GPS_RESCUE)) && !isGPSRescueDisabled()) {
         if (!FLIGHT_MODE(GPS_RESCUE_MODE)) {
             ENABLE_FLIGHT_MODE(GPS_RESCUE_MODE);
         }
@@ -1028,6 +1033,13 @@ bool isFlipOverAfterCrashMode(void)
 {
     return flipOverAfterCrashMode;
 }
+
+#ifdef USE_GPS_RESCUE
+bool isGPSRescueDisabled(void)
+{
+	return gpsRescueDisabled;
+}
+#endif
 
 timeUs_t getLastDisarmTimeUs(void)
 {

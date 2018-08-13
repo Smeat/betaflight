@@ -874,6 +874,14 @@ static bool osdDrawSingleElement(uint8_t item)
                 break;
             }
 
+#ifdef USE_GPS_RESCUE
+            // Show warning to confirm the deactivation of GPS rescue
+            if (osdWarnGetState(OSD_WARNING_GPS_RESCUE_OFF) && isGPSRescueDisabled() && !ARMING_FLAG(ARMED)) {
+                osdFormatMessage(buff, OSD_FORMAT_MESSAGE_BUFFER_SIZE, "RESCUE OFF");
+                break;
+            }
+#endif
+
             osdFormatMessage(buff, OSD_FORMAT_MESSAGE_BUFFER_SIZE, NULL);
             break;
         }

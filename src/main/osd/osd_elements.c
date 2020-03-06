@@ -123,7 +123,9 @@
 #include "sensors/battery.h"
 #include "sensors/esc_sensor.h"
 #include "sensors/sensors.h"
+#include "sensors/laptime.h"
 
+#include "cli/cli.h"
 
 #define AH_SYMBOL_COUNT 9
 #define AH_SIDEBAR_WIDTH_POS 7
@@ -568,6 +570,19 @@ static void osdElementAntiGravity(osdElementParms_t *element)
     if (pidOsdAntiGravityActive()) {
         strcpy(element->buff, "AG");
     }
+}
+
+static void osdElementLaptime(osdElementParms_t *element)
+{
+    laptime_t last_lap = get_last_lap();
+    int pos = 0;
+    pos = tfp_sprintf(element->buff, "%dT", last_lap.lap);
+    // if we have some bogus data and would overflow with the time, just skip the lap part
+    if(pos + 8 >= OSD_ELEMENT_BUFFER_LENGTH - 1) {
+        pos = 0;
+    }
+    // format time with HUNDRETH has a length of 8
+    osdFormatTime(element->buff + pos, OSD_TIMER_PREC_HUNDREDTHS, last_lap.time * 1000);
 }
 
 #ifdef USE_ACC
@@ -1575,6 +1590,7 @@ static const uint8_t osdElementDisplayOrder[] = {
 #endif
     OSD_COMPASS_BAR,
     OSD_ANTI_GRAVITY,
+    OSD_LAPTIME,
 #ifdef USE_BLACKBOX
     OSD_LOG_STATUS,
 #endif
@@ -1683,6 +1699,7 @@ const osdElementDrawFn osdElementDrawFunction[OSD_ITEM_COUNT] = {
     [OSD_CORE_TEMPERATURE]        = osdElementCoreTemperature,
 #endif
     [OSD_ANTI_GRAVITY]            = osdElementAntiGravity,
+    [OSD_LAPTIME]                 = osdElementLaptime,
 #ifdef USE_ACC
     [OSD_G_FORCE]                 = osdElementGForce,
 #endif

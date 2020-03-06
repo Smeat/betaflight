@@ -135,6 +135,7 @@
 #include "sensors/gyro.h"
 #include "sensors/gyro_init.h"
 #include "sensors/rangefinder.h"
+#include "sensors/laptime.h"
 
 #include "telemetry/telemetry.h"
 
@@ -3487,6 +3488,15 @@ static mspResult_e mspCommonProcessInCommand(mspDescriptor_t srcDesc, int16_t cm
                 return MSP_RESULT_ERROR;
 #endif
             }
+        }
+        break;
+    case MSP_SET_LAPTIME:
+        {
+            laptime_t new_lap;
+            new_lap.pilot = sbufReadU8(src);
+            new_lap.lap = sbufReadU8(src);
+            new_lap.time = sbufReadU32(src);
+            set_lap(&new_lap);
         }
         break;
 

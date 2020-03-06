@@ -95,6 +95,7 @@ const OSD_Entry menuOsdActiveElemsEntries[] =
     {"CORE TEMPERATURE",   OME_VISIBLE, NULL, &osdConfig_item_pos[OSD_CORE_TEMPERATURE], DYNAMIC},
 #endif
     {"ANTI GRAVITY",       OME_VISIBLE, NULL, &osdConfig_item_pos[OSD_ANTI_GRAVITY], DYNAMIC},
+    {"LAPTIME",            OME_VISIBLE, NULL, &osdConfig_item_pos[OSD_LAPTIME], DYNAMIC},
     {"FLY MODE",           OME_VISIBLE, NULL, &osdConfig_item_pos[OSD_FLYMODE], DYNAMIC},
     {"NAME",               OME_VISIBLE, NULL, &osdConfig_item_pos[OSD_CRAFT_NAME], DYNAMIC},
     {"THROTTLE",           OME_VISIBLE, NULL, &osdConfig_item_pos[OSD_THROTTLE_POS], DYNAMIC},

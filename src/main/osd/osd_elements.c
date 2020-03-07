@@ -574,6 +574,9 @@ static void osdElementAntiGravity(osdElementParms_t *element)
 
 static void osdElementLaptime(osdElementParms_t *element)
 {
+    #define LAP_BLINKING_TIME_US 2000*1000
+	static int last_lap_num = 0;
+	static int last_lap_us = 0;
     laptime_t last_lap = get_last_lap();
     int pos = 0;
     pos = tfp_sprintf(element->buff, "%dT", last_lap.lap);
@@ -583,6 +586,15 @@ static void osdElementLaptime(osdElementParms_t *element)
     }
     // format time with HUNDRETH has a length of 8
     osdFormatTime(element->buff + pos, OSD_TIMER_PREC_HUNDREDTHS, last_lap.time * 1000);
+
+	if(last_lap.lap > last_lap_num) {
+		SET_BLINK(OSD_LAPTIME);
+		last_lap_us = micros();
+		last_lap_num = last_lap.lap;
+	}
+	if(micros() - last_lap_us > LAP_BLINKING_TIME_US) {
+		CLR_BLINK(OSD_LAPTIME);
+	}
 }
 
 #ifdef USE_ACC

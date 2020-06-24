@@ -579,7 +579,7 @@ static void osdElementLaptime(osdElementParms_t *element)
 	static int last_lap_us = 0;
     laptime_t last_lap = get_last_lap();
     int pos = 0;
-    pos = tfp_sprintf(element->buff, "%dT", last_lap.lap);
+    pos = tfp_sprintf(element->buff, "L%dT", last_lap.lap);
     // if we have some bogus data and would overflow with the time, just skip the lap part
     if(pos + 8 >= OSD_ELEMENT_BUFFER_LENGTH - 1) {
         pos = 0;
